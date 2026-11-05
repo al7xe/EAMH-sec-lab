@@ -3,50 +3,72 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="EAMH Security Lab - مشروع أكاديمي في أمن البرمجيات">
-  <title>EAMH Security Lab</title>
+  <meta name="description" content="NetWatch - أداة محلية لاكتشاف ومراقبة أجهزة الشبكة الداخلية">
+  <title>NetWatch | مراقبة الشبكة المحلية</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
 </head>
 <body>
-  <main class="page-shell">
-    <nav class="topbar" aria-label="التنقل الرئيسي">
-      <a class="brand" href="/">EAMH<span>.</span></a>
-      <span class="course-tag">SOFTWARE SECURITY</span>
-    </nav>
+  <div class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NetWatch الصفحة الرئيسية"><span class="brand-mark">N</span><span>NET<span class="accent">WATCH</span></span></a>
+      <div class="top-meta"><span class="live-dot"></span><span>مراقبة محلية</span><span class="version">الإصدار 1.0</span></div>
+    </header>
 
-    <section class="hero">
-      <div class="eyebrow"><span class="status-dot"></span> STUDENT DEVELOPMENT TEAM</div>
-      <h1>نبني تطبيقات<br><span>أكثر أمانًا.</span></h1>
-      <p class="intro">
-        مرحبًا بكم في مساحة فريق EAMH للمشاريع والتطبيقات العملية
-        ضمن مقرر أمن البرمجيات.
-      </p>
-      <a class="cta" href="#about">اكتشف المشروع <span aria-hidden="true">←</span></a>
-      <div class="hero-mark" aria-hidden="true">E</div>
-    </section>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">NETWORK DISCOVERY & MONITORING</p>
+          <h1>شبكتك، <span>تحت المراقبة.</span></h1>
+          <p>اكتشف الأجهزة المتصلة بشبكتك الداخلية، وتابع حالة الاتصال وزمن الاستجابة من لوحة واحدة تعمل محليًا.</p>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+          <div class="core"><span>LAN</span></div>
+          <i class="node node-a"></i><i class="node node-b"></i><i class="node node-c"></i><i class="node node-d"></i>
+          <span class="link link-a"></span><span class="link link-b"></span><span class="link link-c"></span><span class="link link-d"></span>
+        </div>
+      </section>
 
-    <section class="details" id="about">
-      <article class="detail-card">
-        <span class="card-index">01 / PROJECT</span>
-        <h2>عن المشروع</h2>
-        <p>مساحة عمل تعليمية لتصميم وتطوير تطبيق ويب باستخدام Python وFlask، مع التركيز على مبادئ أمن البرمجيات.</p>
-      </article>
-      <article class="detail-card">
-        <span class="card-index">02 / TEAM</span>
-        <h2>فريق العمل</h2>
-        <p>إلياس · أحمد · محمد · حسام</p>
-      </article>
-      <article class="detail-card">
-        <span class="card-index">03 / FOCUS</span>
-        <h2>أولوياتنا</h2>
-        <p>كتابة كود واضح، والتحقق من المدخلات، وحماية البيانات، واختبار التطبيق بصورة مسؤولة.</p>
-      </article>
-    </section>
+      <section class="scan-panel">
+        <div class="section-heading">
+          <div><p class="eyebrow">DISCOVERY</p><h2>اكتشاف أجهزة الشبكة</h2></div>
+          <span class="safe-label">فحص الشبكات الخاصة فقط</span>
+        </div>
+        <form id="scan-form" class="scan-form">
+          <label for="network-input">عنوان الشبكة (CIDR)</label>
+          <div class="scan-controls">
+            <input id="network-input" name="network" value="192.168.1.0/24" placeholder="192.168.1.0/24" required spellcheck="false" dir="ltr">
+            <button id="scan-button" type="submit"><span class="button-icon">⌕</span> ابدأ الفحص</button>
+          </div>
+          <p class="hint">مثال: 192.168.1.0/24 — الحد الأقصى 254 عنوانًا. افحص شبكة تملكها أو لديك تصريح بإدارتها.</p>
+        </form>
+        <div id="message" class="message" role="status" aria-live="polite">أدخل نطاق شبكتك ثم اضغط «ابدأ الفحص».</div>
+      </section>
 
-    <footer>
-      <span>© 2026 EAMH Security Lab</span>
-      <span>BUILD SECURE. THINK SMART.</span>
-    </footer>
-  </main>
+      <section class="stats-grid" aria-label="إحصائيات الشبكة">
+        <article class="stat-card"><span class="stat-label">الأجهزة التي تم فحصها</span><strong id="stat-total">—</strong><span class="stat-foot">HOSTS SCANNED</span></article>
+        <article class="stat-card"><span class="stat-label">أجهزة متصلة</span><strong id="stat-online" class="green">—</strong><span class="stat-foot">ONLINE</span></article>
+        <article class="stat-card"><span class="stat-label">أجهزة غير مستجيبة</span><strong id="stat-offline" class="red">—</strong><span class="stat-foot">OFFLINE / NO REPLY</span></article>
+        <article class="stat-card"><span class="stat-label">متوسط زمن الاستجابة</span><strong id="stat-latency">—</strong><span class="stat-foot">AVERAGE LATENCY</span></article>
+      </section>
+
+      <section class="devices-panel">
+        <div class="section-heading devices-heading">
+          <div><p class="eyebrow">LIVE INVENTORY</p><h2>أجهزة الشبكة</h2></div>
+          <div class="table-actions"><span id="last-scan">لم يتم الفحص بعد</span><button id="refresh-button" class="secondary-button" type="button" disabled>تحديث الحالة ↻</button></div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>عنوان IP</th><th>عنوان MAC</th><th>الحالة</th><th>زمن الاستجابة</th></tr></thead>
+            <tbody id="device-list"><tr class="empty-row"><td colspan="4">لا توجد نتائج بعد. ابدأ فحص الشبكة لعرض الأجهزة.</td></tr></tbody>
+          </table>
+        </div>
+        <p class="table-note">ملاحظة: قد لا يظهر عنوان MAC لبعض الأجهزة بسبب قيود نظام التشغيل أو جدول ARP. وعدم استجابة Ping لا يعني بالضرورة أن الجهاز متوقف؛ فقد يمنع جدار الحماية ICMP.</p>
+      </section>
+    </main>
+
+    <footer><span>© 2026 EAMH · NetWatch</span><span>BUILT FOR LOCAL NETWORK VISIBILITY</span></footer>
+  </div>
 </body>
 </html>
