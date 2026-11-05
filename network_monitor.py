@@ -43,6 +43,8 @@ def ping_host(address):
     system = platform.system().lower()
     if system == "windows":
         command = ["ping", "-n", "1", "-w", "1000", address]
+    elif system == "darwin":
+        command = ["ping", "-c", "1", "-W", "1000", address]
     else:
         command = ["ping", "-c", "1", "-W", "1", address]
 
@@ -57,6 +59,9 @@ def ping_host(address):
         )
         elapsed_ms = round((time.perf_counter() - started) * 1000, 2)
         online = completed.returncode == 0
+        ping_time = re.search(r"time[=<]\\s*([0-9.]+)\\s*ms", completed.stdout + completed.stderr, re.IGNORECASE)
+        if ping_time:
+            elapsed_ms = float(ping_time.group(1))
         return {
             "ip": address,
             "status": "online" if online else "offline",
@@ -96,5 +101,16 @@ def scan_network(network):
     arp_entries = _read_arp_table()
     for host in results:
         host["mac"] = arp_entries.get(host["ip"])
+    results.sort(key=lambda item: ipaddress.ip_address(item["ip"]))
+    return results
+
+
+def monitor_hosts(addresses):
+    """Check a batch of already validated private addresses concurrently."""
+    results = []
+    with ThreadPoolExecutor(max_workers=min(48, max(1, len(addresses)))) as pool:
+        futures = [pool.submit(ping_host, address) for address in addresses]
+        for future in as_completed(futures):
+            results.append(future.result())
     results.sort(key=lambda item: ipaddress.ip_address(item["ip"]))
     return results
