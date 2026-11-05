@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, render_template, request
-from network_monitor import scan_network, ping_host, validate_network, validate_private_ip
+from network_monitor import scan_network, monitor_hosts, validate_network, validate_private_ip
 
 app = Flask(__name__)
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024
@@ -59,7 +59,7 @@ def api_monitor():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
 
-    results = [ping_host(address) for address in checked]
+    results = monitor_hosts(checked)
     return jsonify({"results": results})
 
 
