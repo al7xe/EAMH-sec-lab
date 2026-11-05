@@ -59,7 +59,7 @@ def ping_host(address):
         )
         elapsed_ms = round((time.perf_counter() - started) * 1000, 2)
         online = completed.returncode == 0
-        ping_time = re.search(r"time[=<]\\s*([0-9.]+)\\s*ms", completed.stdout + completed.stderr, re.IGNORECASE)
+        ping_time = re.search(r"time[=<]\s*([0-9.]+)\s*ms", completed.stdout + completed.stderr, re.IGNORECASE)
         if ping_time:
             elapsed_ms = float(ping_time.group(1))
         return {
@@ -84,7 +84,7 @@ def _read_arp_table():
         return {}
 
     entries = {}
-    pattern = re.compile(r"(?P<ip>\d{1,3}(?:\.\d{1,3}){3})\s+(?P<mac>(?:[0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2})")
+    pattern = re.compile(r"(?P<ip>\d{1,3}(?:\.\d{1,3}){3})\)?\s+(?:at\s+)?(?P<mac>(?:[0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2})", re.IGNORECASE)
     for match in pattern.finditer(result.stdout):
         entries[match.group("ip")] = match.group("mac").replace("-", ":").lower()
     return entries
