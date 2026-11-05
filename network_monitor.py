@@ -79,7 +79,7 @@ def _read_arp_table():
         return {}
 
     entries = {}
-    pattern = re.compile(r"(?P<ip>\\d{1,3}(?:\\.\\d{1,3}){3})\\s+(?P<mac>(?:[0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2})")
+    pattern = re.compile(r"(?P<ip>\d{1,3}(?:\.\d{1,3}){3})\s+(?P<mac>(?:[0-9a-fA-F]{2}[:-]){5}[0-9a-fA-F]{2})")
     for match in pattern.finditer(result.stdout):
         entries[match.group("ip")] = match.group("mac").replace("-", ":").lower()
     return entries
