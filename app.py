@@ -51,7 +51,7 @@ def api_scan():
 def api_monitor():
     data = request.get_json(silent=True) or {}
     addresses = data.get("addresses", [])
-    if not isinstance(addresses, list) or not 1 <= len(addresses) <= 64:
+    if not isinstance(addresses, list) or not 1 <= len(addresses) <= 254:
         return jsonify({"error": "قائمة الأجهزة غير صالحة."}), 400
 
     try:
